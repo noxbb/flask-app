@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Матрица | Погода и Курс Валют</title>
+    <style>
+        body {
+            background-color: black;
+            color: #00ff00;
+            font-family: "Courier New", monospace;
+            text-align: center;
+        }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            padding: 20px;
+            border: 2px solid #00ff00;
+        }
+        h1 {
+            text-shadow: 0px 0px 10px #00ff00;
+        }
+        .weather, .exchange {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #00ff00;
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+        .weather img {
+            width: 50px;
+            height: 50px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>🌐 Погода и Курс Валют | Матрица</h1>
+
+    <div class="container">
+        <div class="weather">
+            <h2>Погода в Днепре (Сегодня)</h2>
+            <p>Температура: {{ today_weather.temp }}°C</p>
+            <p>Описание: {{ today_weather.description }}</p>
+            <img src="https:{{ today_weather.icon }}" alt="Иконка погоды">
+        </div>
+
+        <div class="weather">
+            <h2>Прогноз на неделю</h2>
+            {% for day in weekly_weather %}
+                <p><b>{{ day.date }}</b>: {{ day.temp }}°C, {{ day.description }} 
+                <img src="https:{{ day.icon }}" alt="Погода"></p>
+            {% endfor %}
+        </div>
+
+        <div class="exchange">
+            <h2>💰 Курс валют</h2>
+            <p>1 USD = {{ exchange_rates.USD|round(2) }} UAH</p>
+            <p>1 EUR = {{ exchange_rates.EUR|round(2) }} UAH</p>
+        </div>
+    </div>
+
+</body>
+</html>
