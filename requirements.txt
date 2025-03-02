@@ -2,5 +2,3 @@ telebot
 requests
 bs4
 python-dotenv
-yt-dlp
-Flask
