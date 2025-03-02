@@ -1,14 +1,17 @@
-import telebot
-import requests
+import os
 import time
+import requests
+import telebot
 from flask import Flask, request
+from dotenv import load_dotenv
 from telebot.types import ReplyKeyboardMarkup, KeyboardButton
 
-# 🔹 Ваши API-ключи
-TOKEN = "7985818132:AAFwAdzb_v-mnbi79GBF7W61vdc73T2vl28"
-NEWS_API_KEY = "41429bb3e88b44bea3b434ad8ec305ef"
-WEATHER_API_KEY = "485c304f7f4a4d2fa49141208250203"
-ADMIN_ID = 6706183152
+# 🔹 Загружаем переменные из .env
+load_dotenv()
+TOKEN = os.getenv("BOT_TOKEN")
+NEWS_API_KEY = os.getenv("NEWS_API_KEY")
+WEATHER_API_KEY = os.getenv("WEATHER_API_KEY")
+ADMIN_ID = int(os.getenv("ADMIN_ID", 6706183152))
 EXCHANGE_API_URL = "https://api.exchangerate-api.com/v4/latest/USD"
 
 # 🔹 Создаём Flask сервер
