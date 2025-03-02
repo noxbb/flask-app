@@ -8,11 +8,11 @@ from telebot.types import ReplyKeyboardMarkup, KeyboardButton
 
 # 🔹 Загружаем переменные из .env
 load_dotenv()
-TOKEN = os.getenv("BOT_TOKEN")
-NEWS_API_KEY = os.getenv("NEWS_API_KEY")
-WEATHER_API_KEY = os.getenv("WEATHER_API_KEY")
-ADMIN_ID = int(os.getenv("ADMIN_ID", 6706183152))
-EXCHANGE_API_URL = "https://api.exchangerate-api.com/v4/latest/USD"
+TOKEN = os.getenv("BOT_TOKEN", "7985818132:AAFwAdzb_v-mnbi79GBF7W61vdc73T2vl28")  # Ваш токен
+NEWS_API_KEY = os.getenv("NEWS_API_KEY", "41429bb3e88b44bea3b434ad8ec305ef")  # API для новостей
+WEATHER_API_KEY = os.getenv("WEATHER_API_KEY", "485c304f7f4a4d2fa49141208250203")  # API для погоды
+ADMIN_ID = int(os.getenv("ADMIN_ID", 6706183152))  # ID администратора
+EXCHANGE_API_URL = "https://api.exchangerate-api.com/v4/latest/USD"  # API курса валют
 
 # 🔹 Создаём Flask сервер
 app = Flask(__name__)
