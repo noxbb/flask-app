@@ -1,8 +1,6 @@
 import telebot
 import requests
 import time
-import yt_dlp
-from bs4 import BeautifulSoup
 from flask import Flask, request
 from telebot.types import ReplyKeyboardMarkup, KeyboardButton
 
@@ -13,7 +11,7 @@ WEATHER_API_KEY = "485c304f7f4a4d2fa49141208250203"
 ADMIN_ID = 6706183152
 EXCHANGE_API_URL = "https://api.exchangerate-api.com/v4/latest/USD"
 
-# 🔹 Запуск Flask (для Webhook)
+# 🔹 Создаём Flask сервер
 app = Flask(__name__)
 bot = telebot.TeleBot(TOKEN)
 banned_users = {}
@@ -75,25 +73,6 @@ def get_news():
 
     return "\n\n".join(news_list)
 
-# 🔹 Функция поиска музыки через YouTube
-def search_music(query):
-    ydl_opts = {
-        "format": "bestaudio/best",
-        "noplaylist": True,
-        "quiet": True,
-    }
-
-    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-        try:
-            search_url = f"ytsearch5:{query}"
-            info = ydl.extract_info(search_url, download=False)
-            music_list = [f"🎵 {entry['title']}\n🔗 [Слушать]({entry['webpage_url']})" for entry in info["entries"]]
-
-            return "\n\n".join(music_list) if music_list else "❌ Музыка не найдена."
-
-        except Exception as e:
-            return f"❌ Ошибка поиска музыки: {str(e)}"
-
 # 🔹 Команда /start
 @bot.message_handler(commands=['start'])
 def start_message(message):
@@ -124,37 +103,7 @@ def handle_buttons(message):
         bot.send_message(message.chat.id, "Введите ID пользователя и время бана (например, `6706183152 10` для блокировки на 10 минут):")
         bot.register_next_step_handler(message, ban_user)
 
-# 🔹 Команда /music
-@bot.message_handler(commands=['music'])
-def music_message(message):
-    query = message.text.replace("/music", "").strip()
-    if not query:
-        bot.send_message(message.chat.id, "🎵 Введите название песни после команды /music")
-        return
-
-    bot.send_message(message.chat.id, "🔍 Ищу музыку...")
-    music_results = search_music(query)
-    bot.send_message(message.chat.id, music_results, parse_mode="Markdown")
-
-# 🔹 Блокировка пользователей
-def ban_user(message):
-    try:
-        parts = message.text.split()
-        user_id = int(parts[0])
-        ban_time = int(parts[1]) * 60
-
-        if user_id == ADMIN_ID:
-            bot.send_message(message.chat.id, "❌ Нельзя заблокировать администратора!")
-            return
-
-        banned_users[user_id] = time.time() + ban_time
-        bot.send_message(message.chat.id, f"✅ Пользователь {user_id} заблокирован на {parts[1]} минут.")
-        bot.send_message(user_id, f"🚫 Вы заблокированы на {parts[1]} минут.")
-
-    except:
-        bot.send_message(message.chat.id, "❌ Неверный формат! Введите ID и время в минутах.")
-
-# 🔹 Webhook для стабильной работы
+# 🔹 Webhook для работы на Render
 @app.route(f"/{TOKEN}", methods=["POST"])
 def webhook():
     bot.process_new_updates([telebot.types.Update.de_json(request.stream.read().decode("utf-8"))])
@@ -164,6 +113,7 @@ def webhook():
 def index():
     return "Бот работает!", 200
 
+# 🔹 Запуск Webhook
 if __name__ == "__main__":
     bot.remove_webhook()
     bot.set_webhook(url=f"https://flask-app-2ah4.onrender.com/{TOKEN}")
